@@ -9,7 +9,7 @@ on:
       - master
 
 env: 
-  AWS_REGION: eu-west-3
+  AWS_REGION: ap-south-1
   ECR_REPOSITORY: kubernetes-github-actions
   SHORT_SHA: $(echo ${{ github.sha }} | cut -c 1-8)
 
@@ -41,7 +41,7 @@ jobs:
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ env.AWS_REGION }}
+        aws-region: ${{ secrets.AWS_REGION }}
       
     - name: Login to Amazon ECR
       id: login-ecr
@@ -50,7 +50,7 @@ jobs:
     - name: Build, tag, and push image to Amazon ECR
       id: build-image
       env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REGISTRY: ${{ myrepo }}
       run: |
         cd site
         docker image build \
